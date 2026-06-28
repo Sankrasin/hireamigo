@@ -56,7 +56,7 @@ export default function App() {
   const [results, setResults] = useState<CandidateResult[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Advanced HR Features State
+  // states for the drag and drop stuff
   const [previewCandidate, setPreviewCandidate] = useState<CandidateResult | null>(null);
   const [draggedCandidate, setDraggedCandidate] = useState<string | null>(null);
 
@@ -115,7 +115,7 @@ export default function App() {
     if (files.length === 0) return alert("Upload resumes first.");
     if (buckets.length === 0) return alert("Please create at least one score bucket.");
 
-    // Validate buckets (No overlaps, no gaps, covers 0-100)
+    // check if buckets are valid
     const sortedBuckets = [...buckets].sort((a, b) => a.minScore - b.minScore);
     for (let i = 0; i < sortedBuckets.length; i++) {
       if (sortedBuckets[i].minScore >= sortedBuckets[i].maxScore) {
@@ -144,7 +144,7 @@ export default function App() {
       formData.append('tags', JSON.stringify(tags.map(t => ({ category: t.category, name: t.name, must_have: t.must_have }))));
       files.forEach(f => formData.append('files', f));
       
-      // Automatically use the live Hugging Face backend URL, or fallback to localhost if needed
+      // use the hf api url
       const API_URL = import.meta.env.VITE_API_URL || 'https://sankrasin-hireamigo.hf.space';
       const res = await fetch(`${API_URL}/api/v1/process`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error("Processing failed");
@@ -205,7 +205,7 @@ export default function App() {
   }
 
   const getPreviewFileUrl = (candidate_name: string) => {
-    // Match the backend logic: original filename without .pdf and underscores replaced by spaces
+    // match the backend name extraction
     const file = files.find(f => f.name.replace(".pdf", "").replace(/_/g, " ") === candidate_name);
     return file ? URL.createObjectURL(file) : null;
   }
