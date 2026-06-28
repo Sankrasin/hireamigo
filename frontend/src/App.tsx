@@ -390,7 +390,7 @@ export default function App() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {buckets.map((bucket, index) => (
+              {buckets.map(bucket => (
                 <div key={bucket.id} style={{ display: 'flex', gap: '1rem', alignItems: 'center', backgroundColor: 'var(--bg-input)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   
                   <div style={{ flex: 2 }}>
