@@ -1,0 +1,26 @@
+# Environment variables
+.env
+
+# Virtual environments
+venv*/
+env/
+.venv/
+
+# macOS
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+dist/
+build/
+
+# Ignored data folders
+Sample Data/
