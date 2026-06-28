@@ -144,7 +144,9 @@ export default function App() {
       formData.append('tags', JSON.stringify(tags.map(t => ({ category: t.category, name: t.name, must_have: t.must_have }))));
       files.forEach(f => formData.append('files', f));
       
-      const res = await fetch('http://localhost:8000/api/v1/process', { method: 'POST', body: formData });
+      // Automatically use the live Hugging Face backend URL, or fallback to localhost if needed
+      const API_URL = import.meta.env.VITE_API_URL || 'https://sankrasin-hireamigo.hf.space';
+      const res = await fetch(`${API_URL}/api/v1/process`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error("Processing failed");
       setResults(await res.json());
     } catch (err) {
