@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './index.css'
 
 type TagCategory = 'Qualification' | 'Skill' | 'Domain' | 'Experience';
@@ -59,6 +59,25 @@ export default function App() {
   // states for the drag and drop stuff
   const [previewCandidate, setPreviewCandidate] = useState<CandidateResult | null>(null);
   const [draggedCandidate, setDraggedCandidate] = useState<string | null>(null);
+
+  const [isBackendReady, setIsBackendReady] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(false);
+
+  useEffect(() => {
+    const wakeUpBackend = async () => {
+      setIsWakingUp(true);
+      const API_URL = import.meta.env.VITE_API_URL || 'https://sankrasin-hireamigo.hf.space';
+      try {
+        await fetch(`${API_URL}/`);
+        setIsBackendReady(true);
+      } catch (err) {
+        console.error("Failed to wake up backend", err);
+      } finally {
+        setIsWakingUp(false);
+      }
+    };
+    wakeUpBackend();
+  }, []);
 
   const handleTagInputChange = (category: TagCategory, value: string) => {
     setNewTagInputs(prev => ({...prev, [category]: value}));
@@ -217,6 +236,17 @@ export default function App() {
           HIREAMIGO
         </h1>
         <p style={{ color: 'var(--text-light)', fontSize: '1.1rem', fontWeight: 500 }}>Stateless AI Resume Screening</p>
+        
+        {isWakingUp && (
+          <div style={{ marginTop: '1rem', color: 'var(--accent-warning)', fontWeight: 'bold' }}>
+            🟡 Waking up AI backend (this may take 1-2 mins)...
+          </div>
+        )}
+        {isBackendReady && !isWakingUp && (
+          <div style={{ marginTop: '1rem', color: 'var(--accent-success)', fontWeight: 'bold' }}>
+            🟢 AI Backend Ready
+          </div>
+        )}
       </header>
 
       {results.length > 0 ? (
